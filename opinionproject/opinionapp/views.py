@@ -5,7 +5,7 @@ from opinionapp.models import Opinion
 def home(request):
     return render(request, 'index.html')
 
-def opinion(request):
+def opinion(request):    # For New Post
     if request.method == 'POST':
         title = request.POST['title']
         message = request.POST['message']
