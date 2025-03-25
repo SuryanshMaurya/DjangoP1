@@ -3,25 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Footer</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
 </head>
 <body>
-    <nav class="navbar fixed-bottom bg-dark" style="border-top-left-radius: 40%;" >
-        <div>
-          <h1 style="color: #cdb4db;font-family: Comic Sans MS; font-size: 4pc;">Opinion's...</h1>
+    <footer class="bg-dark text-light py-4">
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-md-4">
+                    <h5 style="font-family: Arial, sans-serif;">About OpinionApp</h5>
+                    <p style="font-size: 14px; line-height: 1.6;">
+                        OpinionApp is a platform where users can share their thoughts and opinions on various topics. Join the conversation and make your voice heard!
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-md-4">
+                    <h5 style="font-family: Arial, sans-serif;">Quick Links</h5>
+                    <ul style="list-style: none; padding: 0; font-size: 14px;">
+                        <li><a href="/home" style="text-decoration: none; color: lightgray;">Home</a></li>
+                        <li><a href="/opinion" style="text-decoration: none; color: lightgray;">Opinions</a></li>
+                        <li><a href="/login" style="text-decoration: none; color: lightgray;">Login</a></li>
+                        <li><a href="/signup" style="text-decoration: none; color: lightgray;">Sign Up</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact & Social Links -->
+                <div class="col-md-4">
+                    <h5 style="font-family: Arial, sans-serif;">Contact Us</h5>
+                    <p style="font-size: 14px; margin: 0;">Email: support@opinionapp.com</p>
+                    <p style="font-size: 14px; margin: 0;">Phone: +1 234 567 890</p>
+                    <div class="mt-3">
+                        <a href="https://github.com/SuryanshMaurya/DjangoP1" target="_blank" style="text-decoration: none; margin-right: 10px;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub" style="width: 30px; border-radius: 50%; background-color: white;">
+                        </a>
+                        <a href="https://twitter.com" target="_blank" style="text-decoration: none; margin-right: 10px;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter" style="width: 30px; border-radius: 50%; background-color: white;">
+                        </a>
+                        <a href="https://facebook.com" target="_blank" style="text-decoration: none; margin-right: 10px;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" style="width: 30px; border-radius: 50%; background-color: white;">
+                        </a>
+                        <a href="https://instagram.com" target="_blank" style="text-decoration: none;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" style="width: 30px; border-radius: 50%; background-color: white;">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="text-center mt-4" style="border-top: 1px solid gray; padding-top: 10px; font-size: 14px;">
+                <p style="margin: 0;">© 2025 OpinionApp. All rights reserved.</p>
+            </div>
         </div>
-
-        <div>
-            <a href="https://github.com/SuryanshMaurya/DjangoP1" style="border-radius: 50%;">
-                <img style="background-color: white;border-radius: 50%; width: 50px;" src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="">
-            </a>
-        </div>
-
-
-    </nav>
-      
+    </footer>
 </body>
 </html>
