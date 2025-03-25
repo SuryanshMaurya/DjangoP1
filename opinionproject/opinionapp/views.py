@@ -5,7 +5,8 @@ from django.contrib.auth.hashers import make_password, check_password
 
 # Create your views here.
 def home(request):
-    return render(request, 'index.html')
+    opinion = Opinion.objects.all()
+    return render(request, 'index.html', {'opinion': opinion})
 
 def opinion(request):    # For New Post
     if request.method == 'POST':
