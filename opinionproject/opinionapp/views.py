@@ -1,12 +1,20 @@
 from django.shortcuts import render , redirect
-from opinionapp.models import Opinion
+from django.http import JsonResponse
+from opinionapp.models import Opinion, reaction
+from django.db.models import Sum
+import json
 from opinionapp.models import user
 from django.contrib.auth.hashers import make_password, check_password
 
 # Create your views here.
 def home(request):
-    opinion = Opinion.objects.all()
-    return render(request, 'index.html', {'opinion': opinion})
+    opinions = Opinion.objects.all()
+    for opinion in opinions:
+        opinion.total_likes = reaction.objects.filter(opinion=opinion).aggregate(Sum('likes'))['likes__sum'] or 0
+        opinion.total_comments = reaction.objects.filter(opinion=opinion).aggregate(Sum('comments'))['comments__sum'] or 0
+        opinion.comments = reaction.objects.filter(opinion=opinion, comments__isnull=False).values('id', 'comments')
+
+    return render(request, 'index.html', {'opinions': opinions})
 
 def opinion(request):    # For New Post
     if request.method == 'POST':
@@ -16,6 +24,23 @@ def opinion(request):    # For New Post
         opinion = Opinion(title=title, message=message, image=image)
         opinion.save()
     return render(request, 'post.html')
+
+def like_opinion(request, opinion_id):
+    if request.method == 'POST':
+        opinion = Opinion.objects.get(id=opinion_id)
+        reaction_obj, created = reaction.objects.get_or_create(opinion=opinion)
+        reaction_obj.likes += 1
+        reaction_obj.save()
+        return JsonResponse({'likes': reaction_obj.likes})
+def comment_opinion(request, opinion_id):
+    if request.method == 'POST':
+        opinion = Opinion.objects.get(id=opinion_id)
+        data = json.loads(request.body)
+        comment_text = data.get('comment')
+        reaction_obj, created = reaction.objects.get_or_create(opinion=opinion)
+        reaction_obj.comments += 1  # Increment the comment count
+        reaction_obj.save()
+        return JsonResponse({'comment': comment_text, 'comments_count': reaction_obj.comments})
 
 def signup(request):
     if request.method == "POST":
