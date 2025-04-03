@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path , include
-from opinionapp.views import home , opinion, login, signup, like_opinion, comment_opinion
+from opinionapp.views import home , opinion, login, signup, like_opinion, comment_opinion , reply_comment
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -26,6 +26,7 @@ urlpatterns = [
     path('opinion/', opinion,name='opinion'),
     path('like/<int:opinion_id>/', like_opinion, name='like_opinion'),
     path('comment/<int:opinion_id>/', comment_opinion, name='comment_opinion'),
+    path('reply/<int:comment_id>/', reply_comment, name='reply_comment'),
     path("__reload__/", include("django_browser_reload.urls")),
     path('login/', login,name='login'),
     path('signup/', signup,name='signup')

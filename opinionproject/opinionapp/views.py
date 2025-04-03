@@ -11,9 +11,8 @@ def home(request):
     opinions = Opinion.objects.all()
     for opinion in opinions:
         opinion.total_likes = reaction.objects.filter(opinion=opinion).aggregate(Sum('likes'))['likes__sum'] or 0
-        opinion.total_comments = reaction.objects.filter(opinion=opinion).aggregate(Sum('comments'))['comments__sum'] or 0
-        opinion.comments = reaction.objects.filter(opinion=opinion, comments__isnull=False).values('id', 'comments')
-
+        opinion.total_comments = reaction.objects.filter(opinion=opinion).count()
+        opinion.comments = reaction.objects.filter(opinion=opinion, parent__isnull=True).prefetch_related('replies')
     return render(request, 'index.html', {'opinions': opinions})
 
 def opinion(request):    # For New Post
@@ -28,19 +27,30 @@ def opinion(request):    # For New Post
 def like_opinion(request, opinion_id):
     if request.method == 'POST':
         opinion = Opinion.objects.get(id=opinion_id)
-        reaction_obj, created = reaction.objects.get_or_create(opinion=opinion)
+        reaction_obj, created = reaction.objects.get_or_create(opinion=opinion, parent=None)  # Ensure parent=None for top-level reactions
         reaction_obj.likes += 1
         reaction_obj.save()
         return JsonResponse({'likes': reaction_obj.likes})
+
 def comment_opinion(request, opinion_id):
     if request.method == 'POST':
         opinion = Opinion.objects.get(id=opinion_id)
         data = json.loads(request.body)
         comment_text = data.get('comment')
-        reaction_obj, created = reaction.objects.get_or_create(opinion=opinion)
-        reaction_obj.comments += 1  # Increment the comment count
-        reaction_obj.save()
-        return JsonResponse({'comment': comment_text, 'comments_count': reaction_obj.comments})
+        reaction_obj = reaction.objects.create(opinion=opinion, comments=comment_text)
+        return JsonResponse({'comment': reaction_obj.comments, 'id': reaction_obj.id})
+
+def reply_comment(request, comment_id):
+    if request.method == 'POST':
+        parent_comment = reaction.objects.get(id=comment_id)
+        data = json.loads(request.body)
+        reply_text = data.get('reply')
+        reply = reaction.objects.create(
+            opinion=parent_comment.opinion,
+            comments=reply_text,
+            parent=parent_comment
+        )
+        return JsonResponse({'reply': reply.comments})
 
 def signup(request):
     if request.method == "POST":

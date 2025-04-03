@@ -1,59 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Opinion Feed</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </head>
-<body style="background-color: #070031; font-family: Arial, sans-serif;">
 
+<body style="background-color: #070031; font-family: Arial, sans-serif; color: white; margin: 0; padding: 0;">
+
+    <!-- Include Navbar -->
     {% include 'Navbar.html' %}
 
-    <div class="container mt-4" style="min-height: 100vh;">
+    <!-- Main Content -->
+    <div class="container" style="margin-top: 20px; min-height: 100vh; color: white;">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 {% for opinion in opinions %}
-                <div class="card" style="margin-bottom: 20px; border: none; border-radius: 10px; color: white; background-color: rgb(0, 0, 0); box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+                <div class="card" style="margin-bottom: 20px; border: none; border-radius: 10px; z-index: 100; background-color: black; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
                     <div class="card-body" style="padding: 15px;">
                         <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                            <img src="https://via.placeholder.com/50" alt="User Avatar" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;">
+                            <img src="https://via.placeholder.com/50" alt="User Avatar" style="width: 50px; height: 50px; border-radius: 50%; margin-right: 10px; color: white;">
                             <div>
-                                <h6 style="margin: 0; font-weight: bold;">{{ opinion.title }}</h6>
-                                <small style="color: gray;">@username · {{ opinion.date }}</small>
+                                <h6 style="margin: 0; font-weight: bold; color: white;">{{ opinion.title }}</h6>
+                                <small>
+                                    <span style="color: gray;">@username</span> 
+                                    <span style="color: white;">· {{ opinion.date }}</span>
+                                </small>
                             </div>
                         </div>
-                        <p style="margin: 10px 0;">{{ opinion.message }}</p>
+                        <p style="margin: 10px 0; color: white;">{{ opinion.message }}</p>
                         {% if opinion.image %}
                         <img src="{{ opinion.image.url }}" alt="Image" style="width: 100%; border-radius: 10px; margin-top: 10px;">
                         {% endif %}
-                        <div style="display: flex; justify-content: space-between; margin-top: 10px; color: white;">
-                            {% csrf_token %}
-                            <span class="like-button" data-opinion-id="{{ opinion.id }}" style="cursor: pointer;">
-                                <i class="bi bi-heart"></i> {{ opinion.total_likes}}
+                        <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                            <span class="like-button" data-opinion-id="{{ opinion.id }}" style="cursor: pointer; color: white;">
+                                <i class="bi bi-heart"></i> {{ opinion.total_likes }}
                             </span>
-                            <span style="cursor: pointer;" onclick="document.getElementById('comments-{{ opinion.id }}').style.display = 'block';">
+                            <span style="cursor: pointer; color: white;" onclick="document.getElementById('comments-{{ opinion.id }}').style.display = 'block';">
                                 <i class="bi bi-chat"></i> Comment
                             </span>
-                            <span>
+                            <span style="cursor: pointer; color: white;">
                                 <i class="bi bi-share"></i> Share
                             </span>
                         </div>
                         <div id="comments-{{ opinion.id }}" style="display: none; margin-top: 10px;">
-                            <ul id="comments-list-{{ opinion.id }}">
+                            <ul id="comments-list-{{ opinion.id }}" style="list-style: none; padding: 0;">
                                 {% for comment in opinion.comments %}
-                                    <li>
-                                        {{ comment.comments }}
-                                        <button class="reply-button" data-comment-id="{{ comment.id }}" style="margin-left: 10px; border: none; background-color: black; color: white;"><i class="bi bi-reply"></i></button>
-                                    </li>
+                                <li style="margin-bottom: 10px;">
+                                    <p style="margin: 0;">{{ comment.comments }}</p>
+                                    <button class="reply-button" data-comment-id="{{ comment.id }}" style="margin-left: 10px; border: none; background-color: black; color: white; cursor: pointer;">
+                                        <i class="bi bi-reply"></i> Reply
+                                    </button>
+                                    <ul id="replies-list-{{ comment.id }}" style="margin-left: 20px; list-style: none; padding: 0;">
+                                        {% for reply in comment.replies.all %}
+                                        <li style="margin-bottom: 5px;">
+                                            <p style="margin: 0;">{{ reply.comments }}</p>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    <form class="add-reply-form" data-comment-id="{{ comment.id }}" style="display: none; margin-top: 10px;">
+                                        {% csrf_token %}
+                                        <div style="display: flex; align-items: center;">
+                                            <input type="text" class="reply-input" placeholder="Add a reply..." style="flex: 1; background-color: black; color: white; border: none; border-radius: 5px; padding: 5px; margin-right: 10px;">
+                                            <button type="submit" style="background-color: black; color: white; border: none; padding: 5px 10px; border-radius: 5px;">
+                                                <i class="bi bi-send-arrow-up"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </li>
                                 {% endfor %}
                             </ul>
-                            <form class="add-comment-form" data-opinion-id="{{ opinion.id }}">
-                            <span style="display: flex; align-items: center;">
-                                <input type="text" class="comment-input" placeholder="Add a comment..." style="width: 90%; margin-top: 10px; background-color: black; color: white; border: none; border-radius: 5px; padding: 5px;">
-                                <button type="submit" style="margin-top: 5px; background-color: black; color: white; border: none; font-size: larger; width: 10%; margin-top: 15px;"><i class="bi bi-send-arrow-up"></i></button>
-                            </span>
+                            <form class="add-comment-form" data-opinion-id="{{ opinion.id }}" style="margin-top: 10px;">
+                                {% csrf_token %}
+                                <div style="display: flex; align-items: center;">
+                                    <input type="text" class="comment-input" placeholder="Add a comment..." style="flex: 1; background-color: black; color: white; border: none; border-radius: 5px; padding: 5px; margin-right: 10px;">
+                                    <button type="submit" style="background-color: black; color: white; border: none; padding: 5px 10px; border-radius: 5px;">
+                                        <i class="bi bi-send-arrow-up"></i>
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -63,60 +93,101 @@
         </div>
     </div>
 
+    <!-- Include Footer -->
     {% include 'bottom.html' %}
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-    // Handle Like Button
-    document.querySelectorAll('.like-button').forEach(button => {
-        button.addEventListener('click', function () {
-            const opinionId = this.dataset.opinionId;
-            fetch(`/like/${opinionId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                this.style.color = 'red';  // Change color to red
-                this.innerHTML = `<i class="bi bi-heart-fill"></i> (${data.likes})`;
-            })
-            .catch(error => {
-                console.error('Error liking the opinion:', error);
-                alert('An error occurred while liking the opinion. Please try again.');
+            // Handle Like Button
+            document.querySelectorAll('.like-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const opinionId = this.dataset.opinionId;
+                    fetch(`/like/${opinionId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            this.style.color = 'red';
+                            this.innerHTML = `<i class="bi bi-heart-fill"></i> (${data.likes})`;
+                        })
+                        .catch(error => {
+                            console.error('Error liking the opinion:', error);
+                            alert('An error occurred while liking the opinion. Please try again.');
+                        });
+                });
             });
-        });
-    });
 
-    // Handle Add Comment
-    document.querySelectorAll('.add-comment-form').forEach(form => {
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const opinionId = this.dataset.opinionId;
-            const commentInput = this.querySelector('.comment-input');
-            fetch(`/comment/${opinionId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ comment: commentInput.value }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                const commentList = document.querySelector(`#comments-list-${opinionId}`);
-                const li = document.createElement('li');
-                li.textContent = data.comment;
-                commentList.appendChild(li);
-                commentInput.value = '';
-            })
-            .catch(error => {
-                console.error('Error adding the comment:', error);
-                alert('An error occurred while adding the comment. Please try again.');
+            // Handle Add Comment
+            document.querySelectorAll('.add-comment-form').forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const opinionId = this.dataset.opinionId;
+                    const commentInput = this.querySelector('.comment-input');
+                    fetch(`/comment/${opinionId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ comment: commentInput.value }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const commentList = document.querySelector(`#comments-list-${opinionId}`);
+                            const li = document.createElement('li');
+                            li.textContent = data.comment;
+                            commentList.appendChild(li);
+                            commentInput.value = '';
+                        })
+                        .catch(error => {
+                            console.error('Error adding the comment:', error);
+                            alert('An error occurred while adding the comment. Please try again.');
+                        });
+                });
+            });
+
+            // Handle Reply Button
+            document.querySelectorAll('.reply-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const commentId = this.dataset.commentId;
+                    const replyForm = document.querySelector(`.add-reply-form[data-comment-id="${commentId}"]`);
+                    replyForm.style.display = 'block';
+                });
+            });
+
+            // Handle Add Reply
+            document.querySelectorAll('.add-reply-form').forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const commentId = this.dataset.commentId;
+                    const replyInput = this.querySelector('.reply-input');
+                    fetch(`/reply/${commentId}/`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ reply: replyInput.value }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const repliesList = document.querySelector(`#replies-list-${commentId}`);
+                            const li = document.createElement('li');
+                            li.innerHTML = `<p>${data.reply}</p>`;
+                            repliesList.appendChild(li);
+                            replyInput.value = '';
+                        })
+                        .catch(error => {
+                            console.error('Error adding the reply:', error);
+                            alert('An error occurred while adding the reply. Please try again.');
+                        });
+                });
             });
         });
-    });
-});
     </script>
 </body>
+
 </html>

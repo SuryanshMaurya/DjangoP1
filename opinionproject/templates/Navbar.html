@@ -1,90 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <title>Opinion Project</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Comic Sans MS', sans-serif;
+            background-color: #070031;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #461686;
+            padding: 20px;
+            overflow-y: auto;
+            color: white;
+            transition: transform 0.3s ease-in-out;
+            transform: translateX(-250px);
+            z-index: 1000;
+        }
+
+        #sidebar.active {
+            transform: translateX(0);
+        }
+
+        #sidebar img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            border: 2px solid white;
+        }
+
+        #sidebar p {
+            margin-top: 10px;
+            font-size: 18px;
+            text-align: left;
+        }
+
+        #sidebar hr {
+            border-color: white;
+        }
+
+        #sidebar a {
+            text-decoration: none;
+            color: white;
+            font-size: 20px;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        #sidebar a i {
+            margin-right: 10px;
+        }
+
+        #sidebar a[style*="color: red"] {
+            color: red;
+        }
+
+        .navbar {
+            background-color: #461686;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .navbar.active {
+            margin-left: 250px;
+        }
+
+        #mainContent {
+            transition: margin-left 0.3s ease-in-out;
+            padding: 20px;
+        }
+
+        #mainContent.active {
+            margin-left: 250px;
+        }
+
+        @media (min-width: 992px) {
+            #sidebar {
+                transform: translateX(0) !important;
+            }
+
+            .navbar {
+                margin-left: 250px !important;
+            }
+
+            #mainContent {
+                margin-left: 250px !important;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-    <nav class="navbar border-bottom border-body" style="background-color: #461686;">
+    <!-- Sidebar -->
+    <div id="sidebar">
         <div>
-            <button type="button" class="btn btn-outline-light text-white">Your Opinion Time</button>
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQcYdMvctNeux05bXpLg-2mvh03tM6-FyFZQ&s"
+                alt="Profile">
+            <p>@username</p>
         </div>
-    
-        <div >
-            <a href="index.html" style="color: rgb(255, 255, 255); font-size: 50px; text-decoration: none; font-family: Comic Sans MS;">Opinion's</a>        
-        </div>
-    
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="border-color: transparent; background-color: transparent;">
-                <img style="border-radius: 50%;height: 5pc;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQcYdMvctNeux05bXpLg-2mvh03tM6-FyFZQ&s" alt="Empty" class="rounded-circle">
+        <hr>
+        <a href="{% url 'home' %}"><i class="bi bi-house-heart"></i> Home</a>
+        <a href="#"><i class="bi bi-chat-heart"></i> Message</a>
+        <a href="#"><i class="bi bi-search-heart"></i> Explore</a>
+        <a href="#"><i class="bi bi-app-indicator"></i> Notifications</a>
+        <a href="#"><i class="bi bi-person-badge"></i> Profile</a>
+        <a href="#"><i class="bi bi-gear"></i> Settings</a>
+        <a href="#" style="color: red;"><i class="bi bi-door-closed"></i> LogOut</a>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <!-- Sidebar Toggle Button -->
+            <button id="menuButton" class="btn btn-outline-light d-lg-none">
+                <i class="bi bi-list"></i>
             </button>
-
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="background-color: #cdb4db;">
-                <div class="offcanvas-header">
-                  <h5 class="offcanvas-title" id="offcanvasRightLabel"  style="color: black; font-size: 50px; text-decoration: none; font-family: Comic Sans MS;"><img style="border-radius: 50%;height: 5pc;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQcYdMvctNeux05bXpLg-2mvh03tM6-FyFZQ&s" alt="Empty" class="rounded-circle"> Opinion's</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body" style="background-color: #217B7E;">
-                    <div >
-
-                        
-                        <a href="" title="Home" style="text-decoration: none;font-family: Comic Sans MS;color: black;font-size: 30px; "><i class="bi bi-house-heart"></i>  Home</a>
-                        
-                    </div>
-                    <br>
-                    <div>
-                        <a href="" title="Message" style="text-decoration: none;font-family: Comic Sans MS;color: black;font-size: 30px;"><i class="bi bi-chat-heart"></i>  Message</a>
-                    </div>
-                    <br>
-                    <div>
-                        <a href="" title="Explore" style="text-decoration: none;font-family: Comic Sans MS;color: black;font-size: 30px;"><i class="bi bi-search-heart"></i>  Explore</a>
-
-                    </div>
-                    <br>
-                    <div>
-                        <a href="" title="Notifications" style="text-decoration: none;font-family: Comic Sans MS;color: black;font-size: 30px;"><i class="bi bi-app-indicator"></i>  Notifications</a>
-
-                    </div>
-                    <br>
-                    <div>
-                        <a href="" title="Profile" style="text-decoration: none;font-family: Comic Sans MS;color: black;font-size: 30px;"><i class="bi bi-person-badge"></i>  Profile</a>
-
-                    </div>
-                    <br>
-                    <div>
-                        <a href="" title="Settings" style="text-decoration: none;font-family: Comic Sans MS;color: black;font-size: 30px;"><i class="bi bi-gear"></i>  Settings</a>
-
-                    </div>
-                    <br>
-                    <div>
-                        <a href="" title="LogOut" style="text-decoration: none;font-family: Comic Sans MS;color: red;font-size: 30px;"><i class="bi bi-door-closed"></i>  LogOut</a>                  
-
-                    </div>
-                </div>
-            </div>
+            <a class="navbar-brand" href="{% url 'home' %}" style="font-size: 30px; font-weight: bold;">Opinion Project</a>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'opinion' %}" style="font-size: 18px;">Your Opinion Time</a>
+                </li>
+            </ul>
         </div>
     </nav>
 
-    <!-- <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
-        <div>
-            <button type="button" class="btn btn-outline-dark">Your Opinion Time</button>
-        </div>
 
-        <div >
-            <a href="index.html" style="color: black; font-size: 50px; text-decoration: none; font-family: Comic Sans MS;">Opinion's</a>        
-        </div>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const menuButton = document.getElementById('menuButton');
+        const mainContent = document.getElementById('mainContent');
+        const navbar = document.querySelector('.navbar');
 
-        <div class="d-flex justify-content-end">
-            <button type="button" style="border-color: transparent; background-color: transparent;">
-                <img style="border-radius: 50%; height: 5pc;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQcYdMvctNeux05bXpLg-2mvh03tM6-FyFZQ&s" alt="Empty" class="rounded-circle">
-            </button>
-        </div>
-    </nav> -->
-    
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('active');
+            navbar.classList.toggle('active');
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 992) {
+                sidebar.classList.add('active');
+                mainContent.classList.add('active');
+                navbar.classList.add('active');
+            } else {
+                sidebar.classList.remove('active');
+                mainContent.classList.remove('active');
+                navbar.classList.remove('active');
+            }
+        });
+
+        if (window.innerWidth >= 992) {
+            sidebar.classList.add('active');
+            mainContent.classList.add('active');
+            navbar.classList.add('active');
+        }
+    </script>
+
 </body>
+
 </html>

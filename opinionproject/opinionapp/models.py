@@ -16,7 +16,6 @@ class reaction(models.Model):
     comments = models.TextField(blank=True, null=True)
     opinion = models.ForeignKey(Opinion, on_delete=models.CASCADE)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
-    opinion = models.ForeignKey(Opinion, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
