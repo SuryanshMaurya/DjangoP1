@@ -53,14 +53,14 @@
                             <ul id="comments-list-{{ opinion.id }}" style="list-style: none; padding: 0;">
                                 {% for comment in opinion.comments %}
                                 <li style="margin-bottom: 10px;">
-                                    <p style="margin: 0;">{{ comment.comments }}</p>
-                                    <button class="reply-button" data-comment-id="{{ comment.id }}" style="margin-left: 10px; border: none; background-color: black; color: white; cursor: pointer;">
+                                    <p style="margin: 0; color: white;">{{ comment.comments }}</p>
+                                    <button class="reply-button" data-comment-id="{{ comment.id }}" style="margin-left: 10px; border: none; background-color: black; color: gray; cursor: pointer;">
                                         <i class="bi bi-reply"></i> Reply
                                     </button>
                                     <ul id="replies-list-{{ comment.id }}" style="margin-left: 20px; list-style: none; padding: 0;">
                                         {% for reply in comment.replies.all %}
                                         <li style="margin-bottom: 5px;">
-                                            <p style="margin: 0;">{{ reply.comments }}</p>
+                                            <p style="margin: 0; color: white;">{{ reply.comments }}</p>
                                         </li>
                                         {% endfor %}
                                     </ul>
